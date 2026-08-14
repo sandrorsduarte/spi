@@ -1,0 +1,23 @@
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+
+# Ficheiros de Configuração e Segredos
+.env
+*.env
+
+# Sessões e Tokens de Autenticação
+oauth.json
+tidal_session.json
+synced_tracks.json
+.cache
+.cache/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Sistema Operativo
+.DS_Store
