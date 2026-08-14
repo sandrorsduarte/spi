@@ -1,0 +1,44 @@
+name: Shared Playlist Integration (SPI) Sync
+
+on:
+  schedule:
+    # Executa automaticamente a cada 15 minutos (24 horas por dia, 7 dias por semana)
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Permite disparar a sincronização manualmente no GitHub
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Restore SQLite Database Cache
+        uses: actions/cache@v4
+        with:
+          path: synced_tracks.db
+          key: spi-db-${{ github.run_id }}
+          restore-keys: |
+            spi-db-
+
+      - name: Run Playlist Sync
+        env:
+          YT_PLAYLIST_ID: ${{ secrets.YT_PLAYLIST_ID }}
+          TIDAL_PLAYLIST_ID: ${{ secrets.TIDAL_PLAYLIST_ID }}
+          TIDAL_SESSION_JSON: ${{ secrets.TIDAL_SESSION_JSON }}
+          SPOTIFY_PLAYLIST_ID: ${{ secrets.SPOTIFY_PLAYLIST_ID }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        run: |
+          python sync.py --once

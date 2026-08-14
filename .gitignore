@@ -7,10 +7,15 @@ env/
 .env
 *.env
 
+# Base de Dados e Estado Local
+synced_tracks.db
+synced_tracks.db-journal
+synced_tracks.json
+
 # Sessões e Tokens de Autenticação
 oauth.json
+browser.json
 tidal_session.json
-synced_tracks.json
 .cache
 .cache/
 
